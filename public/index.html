@@ -1,0 +1,22 @@
+<html>
+	<head>
+	</head>
+<body>
+
+	<form action="/api/recognize" method="post" enctype="multipart/form-data">
+		<h3>Detech Faces</h3>
+		<input type="file" accept="image/*;capture=camera" name="image" id="image">
+		<br>
+		<br>
+		<input type="submit">
+	</form>
+
+	<form action="/api/detectlables" method="post" enctype="multipart/form-data">
+		<h3>Detech Labels</h3>
+		<input type="file" accept="image/*;capture=camera" name="image" id="image">
+		<br>
+		<br>
+		<input type="submit">
+	</form>
+</body>
+</html>
