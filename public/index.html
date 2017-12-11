@@ -18,5 +18,21 @@
 		<br>
 		<input type="submit">
 	</form>
+	
+	<form action="/api/detecttext" method="post" enctype="multipart/form-data">
+		<h3>Detech Text</h3>
+		<input type="file" accept="image/*;capture=camera" name="image" id="image">
+		<br>
+		<br>
+		<input type="submit">
+	</form>
+	
+	<form action="/api/detectceleb" method="post" enctype="multipart/form-data">
+		<h3>Celebrity detection</h3>
+		<input type="file" accept="image/*;capture=camera" name="image" id="image">
+		<br>
+		<br>
+		<input type="submit">
+	</form>
 </body>
 </html>

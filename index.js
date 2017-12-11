@@ -1,13 +1,12 @@
 var express = require('express');
 var app = express();
 
-var config = require('./config.js')
 
 var multer  = require('multer')
 var upload = multer({ dest: 'uploads/' });
 
 var AWS = require('aws-sdk');
-AWS.config.region = config.region;
+AWS.config.region = "us-east-1";
 
 AWS.config.loadFromPath('./config.json');
 var fs = require('fs-extra');
@@ -16,7 +15,7 @@ var path = require('path');
 
 app.use(express.static('public'));
 
-var rekognition = new AWS.Rekognition({region: config.region});
+var rekognition = new AWS.Rekognition({region: "us-east-1"});
 
 app.post('/api/recognize', upload.single("image"), function (req, res, next) {
 	var bitmap = fs.readFileSync(req.file.path);
@@ -49,6 +48,48 @@ app.post('/api/detectlables', upload.single("image"), function (req, res, next) 
 	 	},
 	 	MaxLabels: 10,
         MinConfidence: 0.0
+	}, function(err, data) {
+	 	if (err) {
+	 		res.send(err);
+	 	} else {
+			if(data)
+			{
+				res.send(data);	
+			} else {
+				res.send("Not recognized");
+			}
+		}
+	});
+});
+
+app.post('/api/detecttext', upload.single("image"), function (req, res, next) {
+	var bitmap = fs.readFileSync(req.file.path);
+
+	rekognition.detectText({
+	 	"Image": { 
+	 		"Bytes": bitmap,
+	 	},
+	}, function(err, data) {
+	 	if (err) {
+	 		res.send(err);
+	 	} else {
+			if(data)
+			{
+				res.send(data);	
+			} else {
+				res.send("Not recognized");
+			}
+		}
+	});
+});
+
+app.post('/api/detectceleb', upload.single("image"), function (req, res, next) {
+	var bitmap = fs.readFileSync(req.file.path);
+
+	rekognition.recognizeCelebrities({
+	 	"Image": { 
+	 		"Bytes": bitmap,
+	 	},
 	}, function(err, data) {
 	 	if (err) {
 	 		res.send(err);
