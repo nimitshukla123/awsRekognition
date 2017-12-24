@@ -11,6 +11,7 @@ AWS.config.region = "us-east-1";
 AWS.config.loadFromPath('./config.json');
 var fs = require('fs-extra');
 var path = require('path');
+const fetch = require('fetch-base64');
 
 
 app.use(express.static('public'));
@@ -91,6 +92,38 @@ app.post('/api/detectceleb', upload.single("image"), function (req, res, next) {
 	 		"Bytes": bitmap,
 	 	},
 	}, function(err, data) {
+	 	if (err) {
+	 		res.send(err);
+	 	} else {
+			if(data)
+			{
+				res.send(data);	
+			} else {
+				res.send("Not recognized");
+			}
+		}
+	});
+});
+
+app.post('/api/comparefaces', upload.array('image', 2), function (req, res, next) {
+	
+	var bitmap = [];
+	var files = req.files;
+	console.log(files);
+	for(var i = 0;i < files.length; i++){
+		bitmap[i] = fs.readFileSync(files[i].path);
+	}	
+	var params = {
+					  SourceImage: { 
+						Bytes: bitmap[0]
+					  },
+					  TargetImage: { 
+						Bytes: bitmap[1]
+					  },
+					  SimilarityThreshold: 0.0
+				};
+
+	rekognition.compareFaces(params, function(err, data) {
 	 	if (err) {
 	 		res.send(err);
 	 	} else {
